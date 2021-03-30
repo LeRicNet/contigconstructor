@@ -1,7 +1,4 @@
-# contigconstructor
-Lightweight and efficient DNA contig construction using van Emde Boas trees
-
-# ContigConstructor: A lightweight and efficient contig mapper and extender
+# ContigConstructor
 
 ## Motivation
 
