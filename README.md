@@ -7,10 +7,11 @@ We want to see what the surrounding milieu is with respect to a known sequence o
 
 ## Methodology
 
+ContigConstructor relies on a tree data structure known as a [van Emde Boas (vEB) tree](http://web.stanford.edu/class/archive/cs/cs166/cs166.1146/lectures/14/Small14.pdf) which stores information as an associate array. This methodology is utilized because it is highly space efficient and can be processed in parallel. Given a query sequence and population of candidate sequences we first determine all unique sequence lengths in the candidates. We then use a sliding window for every unique length to store hashed subsequences and their start and stop indices in the . We then search for all candidate sequences to collect the query indices in which there are matches. The largest extension possible is calculated using the indices and read lengths and the contig is extended accordingly. Unused reads are recycled and the process repeats until there are no longer any matching reads.
 
 ### Dependencies
 
-ContigConstructor was specifically built under Python 3.6.8 and uses NumPy 1.17.2. While this can not be guaranteed, we expect that ContigConstructor can be run on Python 3+.
+ContigConstructor was specifically built under <b>Python 3.6.8</b> and uses <b>NumPy 1.17.2</b>. While this can not be guaranteed, we expect that ContigConstructor can be run on Python 3+.
 
 ## Easy Install
 
@@ -27,7 +28,7 @@ cd ./contigconstructor
 The main script for ContigConstructor is `./build_contig.py`. It can be executed from the command line using the following specifications:
 
 ```
-build_contig.py [-h] --query_file_path QUERY_FILE_PATH --test_file_path
+usage: build_contig.py [-h] --query_file_path QUERY_FILE_PATH --test_file_path
                        TEST_FILE_PATH --save_path SAVE_PATH [--bidirectional]
                        [--map_mode {wide,deep}] [--subsample_n SUBSAMPLE_N]
                        [--random_seed RANDOM_SEED] [--verbose]
@@ -48,6 +49,9 @@ optional arguments:
   --bidirectional       Reads in test_file_path will be read in both
                         directions (L to R and R to L).
   --map_mode {wide,deep}
+                        Whether to extend the contig by creating windowed
+                        reads, or only map full matches within the query
+                        sequence.
   --subsample_n SUBSAMPLE_N
                         Integer number to sample reads from test_file_path.
                         This can help speed up the algorithm.

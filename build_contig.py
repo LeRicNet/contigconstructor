@@ -35,7 +35,8 @@ parser.add_argument("--save_path",
                     help="Path to directory where output files will be saved.")
 parser.add_argument("--bidirectional", action='store_true',
                     help="Reads in test_file_path will be read in both directions (L to R and R to L).")
-parser.add_argument("--map_mode", type=str, choices=['wide', 'deep'], default="wide")
+parser.add_argument("--map_mode", type=str, choices=['wide', 'deep'], default="wide",
+                    help="Whether to extend the contig by creating windowed reads, or only map full matches within the query sequence.")
 parser.add_argument("--subsample_n",
                     type=int, required=False, default=0,
                     help="Integer number to sample reads from test_file_path. This can help speed up the algorithm.")
