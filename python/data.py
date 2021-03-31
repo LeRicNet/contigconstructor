@@ -2,7 +2,7 @@ from python.io import hash_fn
 
 class Read(object):
 
-    def __init__(self, seqid, read, min_overlap, direction=0):
+    def __init__(self, seqid, read, min_overlap, direction=0, original_id=None):
         super(Read, self).__init__()
         self.seqid = seqid
         self.read = read
@@ -16,6 +16,7 @@ class Read(object):
         self.window_start_idx = None
         self.window_end_idx = None
         self.read_original_length = None
+        self.original_id = original_id
 
         self.r = hash_fn(read)
 
@@ -40,7 +41,7 @@ class Read(object):
         # [2,5] |-XXXX|
         # [1,5] |XXXXX|
         for i in range(1, self.read_length - self.min_overlap + 1):
-            _read = Read("{}_window".format(self.seqid), self.read[i:], self.min_overlap)
+            _read = Read("{}_window".format(self.seqid), self.read[i:], self.min_overlap, original_id=self.seqid)
             _read.window_start_idx = i
             _read.window_end_idx = self.read_length
             _read.read_original_length = self.read_length
@@ -56,7 +57,7 @@ class Read(object):
         #                       but is shown here for illustrations
 
         for i in range(self.min_overlap, self.read_length + 1):
-            _read = Read("{}_window".format(self.seqid), self.read[:i], self.min_overlap)
+            _read = Read("{}_window".format(self.seqid), self.read[:i], self.min_overlap, original_id=self.seqid)
             _read.window_start_idx = 0
             _read.window_end_idx = i
             _read.read_original_length = self.read_length

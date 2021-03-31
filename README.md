@@ -112,7 +112,7 @@ python build_contig.py \
 --verbose
 ```
 
-During execution you will see the something similar to following display:
+During execution you will see the something similar to the following display:
 
 ```
 	 ** Loading Query Sequence and Target Sequences
@@ -125,7 +125,13 @@ During execution you will see the something similar to following display:
 	 ** Found 0 interior matches.
 ```
 
-Example outputs can be found under `./examples/contig/`.
+This will output a CSV file, named `output.aln` that will look like:
+
+```
+                sseqid    qseqid  sstart  ssend  qstart  qend direction
+0    2G5Z3:08145:05274  contig:1       0      5     197   204         F
+1  R-2S43D:07433:12037  contig:1     641    648       0     7         R
+```
 
 ## Limitations
 

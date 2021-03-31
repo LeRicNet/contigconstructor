@@ -4,11 +4,7 @@ import copy
 
 from python.io import read_query_file, logmessage
 from python.data import Read, Query
-from python.utils import get_extension
 from python.veb import VEB
-
-# Parameters
-
 
 # Load User Arguments
 parser = argparse.ArgumentParser()
@@ -68,6 +64,7 @@ if BIDRECTIONAL:
         r.read = r.read[::-1]
         r.direction = 1
         r.seqid = "R-{}".format(r.seqid)
+
 
 windowed_reads = copy.deepcopy(reads)
 rev_windowed_reads = copy.deepcopy(rev_reads)
@@ -208,156 +205,27 @@ for match in forward_matches + reverse_matches:
 logmessage("\t ** Extending to the left by {} and to the right by {}".format(
     left_extension['extension'], right_extension['extension']), verbose=VERBOSE)
 logmessage("\t ** Found {} interior matches.".format(len(interior_matches)), verbose=VERBOSE)
-#
-#     # Collect the original reads for each of the extensions
-#     print(_r_best)
-#     print(_m_best)
-#     print(query.q[_m_best[0]:_m_best[1]])
-#     tmp = query.q[::-1]
-#     print(query.q)
-#     print(tmp[_m_best[0]:_m_best[1]])
-    # get_extension(left_extension, reads, side="left")
 
-#
-#
-#     # Separate the reads into matched and mismatched lists
-#     f_matched_reads, f_mismatched_reads, r_matched_reads, r_mismatched_reads = [], [], [], []
-#     for r in reads:
-#         if r.has_matched:
-#             if r.direction == 0:
-#                 f_matched_reads.append(r)
-#             elif r.direction == 1:
-#                 r_matched_reads.append(r)
-#         else:
-#             if r.direction == 0:
-#                 f_mismatched_reads.append(r)
-#             elif r.direction == 1:
-#                 r_mismatched_reads.append(r)
-#
-#     # matched_reads = [r for r in reads if r.has_matched]
-#     print("Found {} matches (F)".format(len(f_matched_reads)))
-#     pickle.dump(f_matched_reads, open("./tmp.p", "wb"))
-#     matched_windows = [r for r in f_matched_reads if "window" in r.seqid]
-#     print("{} windows".format(len(matched_windows)))
-#
-#     f_max_extension_right, f_max_extension_left = [0, None], [0, None]
-#     for matched_read in tqdm(f_matched_reads):
-#         _matches = matched_read.matches[-1]
-#         if 'window' in matched_read.seqid:
-#             original_read = [r for r in reads if r.seqid == matched_read.seqid.split("_")[0]]
-#             original_read_size = original_read[0].read_length
-#             if _matches[1] - original_read_size < 0:
-#                 # print("Extending contig to the left by {} bases".format((int(_matches[1] - original_read_size))))
-#                 start = _matches[1] - original_read_size
-#                 stop = original_read_size + 1
-#                 extension = abs(int(_matches[1] - original_read_size))
-#                 if extension > f_max_extension_left[0]:
-#                     f_max_extension_left = [extension, matched_read]
-#             elif _matches[0] + original_read_size > query.size:
-#                 start = _matches[0]
-#                 stop = start + original_read_size
-#                 extension = abs(int(stop - query.size))
-#                 # print("Extending contig to the right by {} bases".format((int(stop - query.size))))
-#                 if extension > f_max_extension_right[0]:
-#                     f_max_extension_right = [extension, matched_read]
-#             else:
-#                 start = _matches[0]
-#                 stop = _matches[1]
-#         else:
-#             start = _matches[0]
-#             stop = _matches[1]
-#
-#         f_coverage.extend(list(range(start, stop)))
-#
-#     # rev_matched_reads = [r for r in rev_reads if r.has_matched]
-#     print("Found {} matches (R)".format(len(r_matched_reads)))
-#     rev_matched_windows = [r for r in r_matched_reads if "window" in r.seqid]
-#     print("{} windows".format(len(rev_matched_windows)))
-#
-#     r_max_extension_right, r_max_extension_left = [0, None], [0, None]
-#     for rev_matched_read in tqdm(r_matched_reads):
-#         _matches = rev_matched_read.matches[-1]
-#         if 'window' in rev_matched_read.seqid:
-#             original_read = [r for r in reads if r.seqid == rev_matched_read.seqid.split("_")[0]]
-#             original_read_size = original_read[0].read_length
-#             if _matches[1] - original_read_size < 0:
-#                 # print("Extending contig to the left by {} bases".format((int(_matches[1] - original_read_size))))
-#                 start = _matches[1] - original_read_size
-#                 stop = original_read_size + 1
-#                 extension = abs(int(_matches[1] - original_read_size))
-#                 if extension > r_max_extension_left[0]:
-#                     r_max_extension_left = [extension, rev_matched_read]
-#             elif _matches[0] + original_read_size > query.size:
-#                 start = _matches[0]
-#                 stop = start + original_read_size
-#                 # print("Extending contig to the right by {} bases".format((int(stop - query.size))))
-#                 extension = abs(int(stop - query.size))
-#                 if extension > r_max_extension_right[0]:
-#                     r_max_extension_right = [extension, rev_matched_read]
-#             else:
-#                 start = _matches[0]
-#                 stop = _matches[1]
-#         else:
-#             start = _matches[0]
-#             stop = _matches[1]
-#
-#         r_coverage.extend(list(range(start, stop)))
-#
-#     # TODO: How to determine which contig extension to carry over? Maximum consensus for a given threshold of homology or single maximum?
-#
-#     right_extension, left_extension = '', ''
-#     # Choose the largest extension to create the next query, q_star
-#     if f_max_extension_left[1] is not None:
-#
-#         _id = f_max_extension_left[1].seqid
-#         if "R" in _id:
-#             _id = _id.split("-")[1]
-#         if "window" in _id:
-#             _id = _id.split("_")[0]
-#         print(_id)
-#         # left_extension = [r for r in reads if r.seqid == f_max_extension_left[1].seqid.split("_")[0] and r.direction == 0][0]
-#         left_extension = [r for r in reads if r.seqid == _id][0]
-#         left_extension = left_extension.read[:-f_max_extension_left[1].read_length]
-#
-#     if f_max_extension_right[1] is not None:
-#         _id = f_max_extension_right[1].seqid
-#         if "R" in _id:
-#             _id = _id.split("-")[1]
-#         if "window" in _id:
-#             _id = _id.split("_")[0]
-#         right_extension = [r for r in reads if r.seqid == _id][0]
-#         right_extension = right_extension.read[f_max_extension_right[1].read_length:]
-#
-#
-#     print("Length L Extension = {}".format(len(left_extension)))
-#     print("Length R Extension = {}".format(len(right_extension)))
-#     print("Length Q star = {}".format(len(query.q_star)))
-#     q_star = left_extension + query.q_star + right_extension
-#     print("New length = {}".format(len(q_star)))
-#     print(q_star)
-#
-#     query.update_q_star(left_extension, right_extension)
-#     reads = f_mismatched_reads + r_mismatched_reads
-#
-#     if (f_max_extension_left[1] is None and f_max_extension_right[1] is None) or \
-#             (len(reads) == 0):
-#         break
-#
-# # coverage = [list(range(r.matches[-1][0], r.matches[-1][1])) for r in matched]
-# #
-# # coverage = [item for sublist in coverage for item in sublist]
-# #
-# fig, (ax1, ax2, ax3) = plt.subplots(nrows=3)
-# sns.distplot(f_coverage, color="orange", label="F", ax=ax1)
-# sns.distplot(r_coverage, color="blue", label="R", ax=ax2)
-# ax3.barh(y=0, height=1, width=query.size, color="gray")
-# ax2.set_xlim(ax1.get_xlim())
-# ax3.set_xlim(ax1.get_xlim())
-#
-# with open("./qstar.txt", "w") as f:
-#     f.write(query.q_star)
-#
-#
-# plt.show()
+# Phase 1 Output
+# The desired output is to provide seqids with index information
+all_matches = [left_extension['read']] + interior_matches + [right_extension['read']]
+results = {
+    'sseqid': [],
+    'qseqid': [],
+    'sstart': [],
+    'ssend': [],
+    'qstart': [],
+    'qend': [],
+    'direction': []
+}
+for _m in all_matches:
+    results['sseqid'].append(_m.original_id)
+    results['qseqid'].append('contig:1')  # Current Phase 1 implementation will only result in one contig
+    results['sstart'].append(_m.matches[-1][0])
+    results['ssend'].append(_m.matches[-1][1])
+    results['qstart'].append(_m.window_start_idx)
+    results['qend'].append(_m.window_end_idx)
+    results['direction'].append("F" if not _m.seqid.startswith("R") else "R")
 
 
+print(pd.DataFrame(results))
