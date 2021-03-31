@@ -95,6 +95,15 @@ GGGTGGTCCCCCTCCTTTACTTGTAACGTTGTCCTAAG
 
 ### Outputs
 
+The output of ContigConstructor is an alignment file in CSV format with the following data fields:
+
+ - `sseqid`
+ - `qseqid`
+ - `sstart`
+ - `ssend`
+ - `qstart`
+ - `qend`
+ - `direction`
 
 ## Example
 
