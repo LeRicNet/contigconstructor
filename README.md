@@ -6,7 +6,11 @@ Contigs are a series of overlapping DNA sequences which assemble to represent a 
 
 ## Methodology
 
-ContigConstructor relies on a tree data structure known as a [van Emde Boas (vEB) tree](http://web.stanford.edu/class/archive/cs/cs166/cs166.1146/lectures/14/Small14.pdf) which stores information as an associate array. This methodology is utilized because it is highly space efficient and can be processed in parallel with `INSERT` and `SEARCH` methods in constant time. Given a query sequence and population of candidate sequences we first determine all unique sequence lengths in the candidates. We then use a sliding window for every unique length to store hashed subsequences and their start and stop indices in the vEB tree. We then search for all candidate sequences in the vEB tree to collect the query indices in which there are matches. The largest extension possible is calculated using the indices and read lengths and the contig is extended accordingly. Unused reads are recycled and the process repeats until there are no longer any matching reads.
+ContigConstructor relies on a tree data structure known as a [van Emde Boas (vEB) tree](http://web.stanford.edu/class/archive/cs/cs166/cs166.1146/lectures/14/Small14.pdf) which stores information as an associate array using <i>m</i>-bit integer keys. This methodology is utilized because it is highly space efficient and can be processed in parallel with `INSERT` and `SEARCH` methods in constant time. However, the run-time does scale with the number of candidate reads to search for. Fortunately this can be thoroughly mitigated via asynchronous parallel execution, which can be quite fast. 
+
+In general the approach is as follows:
+
+Given a query sequence and population of candidate sequences we first determine all unique sequence lengths in the candidates. We then use a sliding window for every unique length to store hashed subsequences and their start and stop indices in the vEB tree. We then search for all candidate sequences in the vEB tree to collect the query indices in which there are matches. The largest extension possible is calculated using the indices and read lengths and the contig is extended accordingly. Unused reads are recycled and the process repeats until there are no longer any matching reads.
 
 ### Dependencies
 
@@ -109,15 +113,15 @@ Example outputs can be found under `./examples/contig/`.
 
 ### Low-Complexity Regions
 
-Low-complexity, repeat regions are a particular challenge especially in the context of smaller windowed reads because they have multiple potential match sites. ContigConstructor utilizes a logical gate to filter out false positive matches by checking for index alignment between the query and candidate read. However, there are likely more efficient ways in handling this issue, either in terms of memory handling or processing speed. One critical component that requires investigation is hash collisions occurring for different but similar low-complexity regions. Because we effectively know the entire search space <i>a priori</i>, one likely solution is to utilize a minimum perfect hashing function to encode the sequences.
+Low-complexity, repeat regions are a particular challenge especially in the context of smaller windowed reads because they have multiple potential match sites. ContigConstructor utilizes a logical gate to filter out false positive matches by checking for index alignment between the query and candidate read. However, there are likely more efficient ways in handling this issue, either in terms of memory handling or processing speed. One critical component that requires investigation is hash collisions occurring for different but similar low-complexity regions. Meaning that two similar sequences are encoded to the same integer value. Because we effectively know the entire search space <i>a priori</i>, one likely solution is to utilize a minimum perfect hashing function to encode the sequences.
 
 ### Sequence Read Quality
 
-There are two concerns with FASTA sequence inputs. The first is that sequencing adapters have not been trimmed from the input data. This will result in the potential for erroneous matches to be found on contig, particularly in the context of small windowed reads.
+There are two concerns with FASTA sequence inputs. The first is that sequencing adapters have not been trimmed from the input data. This will result in the potential for erroneous matches to be found on contig, particularly in the context of small windowed reads. The second issue is sequencing read quality; as a given sequence is acquired there is a build up of error such that the last base has more uncertainty than the first base. ContigConstructor makes no assumption about sequence quality and it is therefore up to the user as to how they preprocess and quality check their sequence data.
 
 ### Phase 1 Limitations
 
-The current implementation (Phase 1) only performs one pass over the reads provided to TEST_FILE_PATH, instead of attempting to match until exhaustion. Phase 2 will investigate the different approaches for how to extend the contig in the case where there are multiple potential extensions. One solution is to simply take the largest single possible extension, or another solution is to take the largest extension with the most homologous matches. An interesting question open for investigation is what is the most informative or reliable of these two methods, or if there is an even better solution for how to handle this step.
+The current implementation (Phase 1) only performs one pass over the reads provided to TEST_FILE_PATH, instead of attempting to match until exhaustion. Phase 2 will investigate the different approaches for how to extend the contig in the case where there are multiple potential extensions. One solution is to simply take the largest single possible extension, or another solution is to take the largest extension with the most homologous matches. An interesting question open for investigation is what is the most informative or reliable of these two methods, or if there is an even better solution for how to handle this step. Another Phase 1 limitation is that parallel search has yet to be implemented. This feature is planned for implementation in Phase 2.
 
 ## Troubleshooting
 
