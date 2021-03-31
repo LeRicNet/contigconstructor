@@ -60,7 +60,9 @@ optional arguments:
 
 Note that `--map_mode=wide` reflects that both the query sequence 
 
-![](./examples/imgs/map_mode.png)
+<p align="center">
+  <img src="./examples/imgs/map_mode.svg">
+</p>
 
 ### Input File Format
 
