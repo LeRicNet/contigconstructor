@@ -69,7 +69,7 @@ Note that `--map_mode` is used to set how reads can be aligned. The figure toy e
 
 ### Input File Format
 
-Both `QUERY_FILE_PATH` and `TEST_FILE_PATH` are required to be in FASTA format. For example the query file might look like like the following:
+Both `QUERY_FILE_PATH` and `TEST_FILE_PATH` are expected to be DNA sequences in FASTA format, containing {A, C, G, T} exclusively. For example the query file might look like like the following:
 
 ```
 >INITIAL_QUERY
@@ -109,11 +109,15 @@ Example outputs can be found under `./examples/contig/`.
 
 ### Low-Complexity Regions
 
+Low-complexity, repeat regions are a particular challenge especially in the context of smaller windowed reads because they have multiple potential match sites. ContigConstructor utilizes a logical gate to filter out false positive matches by checking for index alignment between the query and candidate read. However, there are likely more efficient ways in handling this issue, either in terms of memory handling or processing speed. One critical component that requires investigation is hash collisions occurring for different but similar low-complexity regions. Because we effectively know the entire search space <i>a priori</i>, one likely solution is to utilize a minimum perfect hashing function to encode the sequences.
+
 ### Sequence Read Quality
+
+There are two concerns with FASTA sequence inputs. The first is that sequencing adapters have not been trimmed from the input data. This will result in the potential for erroneous matches to be found on contig, particularly in the context of small windowed reads.
 
 ### Phase 1 Limitations
 
-The current implementation (Phase 1) only performs one pass over the reads provided to TEST_FILE_PATH,
+The current implementation (Phase 1) only performs one pass over the reads provided to TEST_FILE_PATH, instead of attempting to match until exhaustion. Phase 2 will investigate the different approaches for how to extend the contig in the case where there are multiple potential extensions. One solution is to simply take the largest single possible extension, or another solution is to take the largest extension with the most homologous matches. An interesting question open for investigation is what is the most informative or reliable of these two methods, or if there is an even better solution for how to handle this step.
 
 ## Troubleshooting
 
