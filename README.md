@@ -2,12 +2,11 @@
 
 ## Motivation
 
-Contigs are genomic sequences
-We want to see what the surrounding milieu is with respect to a known sequence of interest.
+Contigs are a series of overlapping DNA sequences which assemble to represent a larger DNA region within a chromosome. [1]((https://www.genome.gov/genetics-glossary/Contig)). Often times in genomic research we might encounter a DNA sequence of interest. The surrounding sequence environment can impart significant effect on the ability for genomic information to propagate through the central dogma of molecular biology (DNA->RNA->Protein). Accordingly, we wish to define the surrounding milieu for our DNA sequence of interest to potentially identify transcriptional factors. Unfortunately, most modern DNA sequencing methods return short read sequences that can be ambiguous and computationally mapping of these to other relatively short sequences can be computationally expensive. Here we present a fast and memory efficient solution, ContigConstructor, which is particularly well-suited for large search spaces.
 
 ## Methodology
 
-ContigConstructor relies on a tree data structure known as a [van Emde Boas (vEB) tree](http://web.stanford.edu/class/archive/cs/cs166/cs166.1146/lectures/14/Small14.pdf) which stores information as an associate array. This methodology is utilized because it is highly space efficient and can be processed in parallel. Given a query sequence and population of candidate sequences we first determine all unique sequence lengths in the candidates. We then use a sliding window for every unique length to store hashed subsequences and their start and stop indices in the . We then search for all candidate sequences to collect the query indices in which there are matches. The largest extension possible is calculated using the indices and read lengths and the contig is extended accordingly. Unused reads are recycled and the process repeats until there are no longer any matching reads.
+ContigConstructor relies on a tree data structure known as a [van Emde Boas (vEB) tree](http://web.stanford.edu/class/archive/cs/cs166/cs166.1146/lectures/14/Small14.pdf) which stores information as an associate array. This methodology is utilized because it is highly space efficient and can be processed in parallel with `INSERT` and `SEARCH` methods in constant time. Given a query sequence and population of candidate sequences we first determine all unique sequence lengths in the candidates. We then use a sliding window for every unique length to store hashed subsequences and their start and stop indices in the vEB tree. We then search for all candidate sequences in the vEB tree to collect the query indices in which there are matches. The largest extension possible is calculated using the indices and read lengths and the contig is extended accordingly. Unused reads are recycled and the process repeats until there are no longer any matching reads.
 
 ### Dependencies
 
