@@ -32,9 +32,10 @@ The main script for ContigConstructor is `./build_contig.py`. It can be executed
 
 ```
 usage: build_contig.py [-h] --query_file_path QUERY_FILE_PATH --test_file_path
-                       TEST_FILE_PATH --save_path SAVE_PATH [--bidirectional]
-                       [--map_mode {wide,deep}] [--subsample_n SUBSAMPLE_N]
-                       [--random_seed RANDOM_SEED] [--verbose]
+                       TEST_FILE_PATH --save_path SAVE_PATH --min_overlap
+                       MIN_OVERLAP [--bidirectional] [--map_mode {wide,deep}]
+                       [--subsample_n SUBSAMPLE_N] [--random_seed RANDOM_SEED]
+                       [--verbose]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -49,6 +50,9 @@ optional arguments:
                         preprocessed for trimming adapter sequences.
   --save_path SAVE_PATH
                         Path to directory where output files will be saved.
+  --min_overlap MIN_OVERLAP
+                        Minimum number of bases that must overlap for a
+                        windowed read to match.
   --bidirectional       Reads in test_file_path will be read in both
                         directions (L to R and R to L).
   --map_mode {wide,deep}
@@ -102,9 +106,23 @@ python build_contig.py \
 --test_file_path=./examples/data/READS.fasta \
 --save_path=./examples/contig/ \
 --bidirectional \
+--min_overla=5 \
 --map_mode=wide \
 --subsample_n=1000 \
 --verbose
+```
+
+During execution you will see the something similar to following display:
+
+```
+	 ** Loading Query Sequence and Target Sequences
+	 ** Making Windowed Reads (F)
+	 ** Making Windowed Reads (R)
+	 ** Creating vEB-scanner
+	 ** Checking for Target Sequences
+	 ** Found 6 Forward Orientation Matches, and 3 Reverse Orientation Matches.
+	 ** Extending to the left by 199 and to the right by 200
+	 ** Found 0 interior matches.
 ```
 
 Example outputs can be found under `./examples/contig/`.
