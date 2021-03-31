@@ -58,7 +58,7 @@ optional arguments:
   
 ```
 
-Note that `--map_mode=wide` reflects that both the query sequence 
+Note that `--map_mode` is used to set how reads can be aligned. The figure toy example below describes a scenario with a query sequence and two candidate reads. ContigConstructor is able to extend the contig left and right by creating <i>windowed reads</i>. Meaning, that we create sliding window reads of both the query and candidate reads such that we can identify matches on the edges. Because of repeating elements when a windowed read is identified we perform a logical check that a positive match is correctly located on the query. This avoid the potential for erroneously mapping short reads on the interior of the query sequence. When `--map_mode=deep`, only matches that are fully contained within the boundaries of the query are considered a match. This assumes that the length of the query is greater than the lengths of the candidate reads. Interior full matches are also considered positive matches when `--map_mode=wide`, but there is a high likelihood that a given full match sequence will have one or more smaller windowed read matches and will be used to extend the contig instead.
 
 <p align="center">
   <img src="./examples/imgs/map_mode.svg">
