@@ -24,7 +24,7 @@ cd ./contigconstructor
 
 ## Usage
 
-The main script for ContigConstructor is build_contig.py. It can be executed from the command line using the following specifications:
+The main script for ContigConstructor is `./build_contig.py`. It can be executed from the command line using the following specifications:
 
 ```
 build_contig.py [-h] --query_file_path QUERY_FILE_PATH --test_file_path
@@ -57,6 +57,10 @@ optional arguments:
   --verbose             Print status updates as algorithm is running.
   
 ```
+
+Note that `--map_mode=wide` reflects that both the query sequence 
+
+![](./examples/imgs/map_mode.png)
 
 ### Input File Format
 
