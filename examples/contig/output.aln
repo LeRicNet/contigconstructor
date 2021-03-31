@@ -1,0 +1,3 @@
+,sseqid,qseqid,sstart,ssend,qstart,qend,direction
+0,2G5Z3:08145:05274,contig:1,0,5,197,204,F
+1,R-2S43D:07433:12037,contig:1,641,648,0,7,R

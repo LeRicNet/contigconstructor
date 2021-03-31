@@ -1,6 +1,8 @@
 import argparse
-import numpy as np
 import copy
+import numpy as np
+import os
+import pandas as pd
 
 from python.io import read_query_file, logmessage
 from python.data import Read, Query
@@ -48,6 +50,9 @@ VERBOSE = args.verbose
 # PLOT_CONTIG = Not Implemented
 
 np.random.seed(RANDOM_SEED)
+
+if not os.path.isdir(SAVE_PATH):
+    os.makedirs(SAVE_PATH)
 
 # Load Data
 logmessage("\t ** Loading Query Sequence and Target Sequences", verbose=VERBOSE)
@@ -227,5 +232,4 @@ for _m in all_matches:
     results['qend'].append(_m.window_end_idx)
     results['direction'].append("F" if not _m.seqid.startswith("R") else "R")
 
-
-print(pd.DataFrame(results))
+pd.DataFrame(results).to_csv(os.path.join(SAVE_PATH, "output.aln"))

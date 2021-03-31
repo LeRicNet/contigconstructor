@@ -14,7 +14,7 @@ Given a query sequence and population of candidate sequences we first determine 
 
 ### Dependencies
 
-ContigConstructor was specifically built under <b>Python 3.6.8</b> and uses <b>NumPy 1.17.2</b>. While this can not be guaranteed, we expect that ContigConstructor can be run on Python 3+.
+ContigConstructor was specifically built under <b>Python 3.6.8</b> and uses <b>NumPy 1.17.2</b> and <b>Pandas 0.25.1</b>. While this can not be guaranteed, we expect that ContigConstructor can be run on Python 3+.
 
 ## Easy Install
 
