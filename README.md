@@ -97,13 +97,15 @@ GGGTGGTCCCCCTCCTTTACTTGTAACGTTGTCCTAAG
 
 The output of ContigConstructor is an alignment file in CSV format with the following data fields:
 
- - `sseqid`
- - `qseqid`
- - `sstart`
- - `ssend`
- - `qstart`
- - `qend`
- - `direction`
+ - `sseqid`: The name of sequencing read from `TEST_FILE_PATH`
+ - `qseqid`: The name of the novel contig identified
+ - `sstart`: The starting index in qseq that matches sseq
+ - `ssend`: The ending index in qseq that matches sseq
+ - `qstart`: The starting index in sseq that matches qseq
+ - `qend`: The ending index in sseq that matches qseq
+ - `direction`: The directionality of sseq (Forwards/Reverse)
+ 
+Note that all indices are 0-indexed.
 
 ## Example
 
